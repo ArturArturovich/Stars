@@ -2,79 +2,158 @@ package ru.geekbrains.archibald;
 
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
 public class StarGame extends ApplicationAdapter {
-	SpriteBatch batch;
-	Background background;
-	Hero hero;
-	Enemy[] enemies;
-	static Bullet[] bullets;
-	Texture textureBullet;
-	
+//    private SpriteBatch batch;
+//    private Background background;
+//    private Hero hero1;
+//    private float timer;
+//    private BitmapFont font;
+//    public static int level = 1;
+//
+//
+//    public void create() {
+//        timer = 0.0f;
+//        batch = new SpriteBatch();
+//        background = new Background();
+//        hero1 = new Hero(Input.Keys.A, Input.Keys.D, Input.Keys.W, Input.Keys.S, Input.Keys.P);
+//        BotsEmitter.getInstance().emitMany(10);
+//        font = new BitmapFont();
+//
+//    }
+//
+//
+//    public void render() {
+//        float dt = Gdx.graphics.getDeltaTime();
+//        update(dt);
+//        Gdx.gl.glClearColor(0f, 0f, 0f, 1.01f);
+//        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+//        batch.enableBlending();
+//        batch.begin();
+//        background.render(batch);
+//        hero1.render(batch);
+//        BotsEmitter.getInstance().render(batch);
+//        batch.setBlendFunction(GL20.GL_SRC_ALPHA, GL20.GL_ONE);
+//        BulletEmitter.getInstance().render(batch);
+//        batch.setBlendFunction(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
+//
+//        if (hero1.isAlive()) {
+//            font.draw(batch, "Level: " + level + "   INFO: WASD - Move, P(press) - Fire", 40, 40);
+//            hero1.renderHUD(batch, font, 40, 680);
+//        } else {
+//            font.draw(batch, "PRESS SPACE TO RESTART", 500, 60);
+//            font.draw(batch, "YOUR SCORE: " + hero1.getScore(), 530, 40);
+//        }
+//
+//        batch.end();
+//    }
+//
+//    public void startNewGame() {
+//        hero1 = new Hero(Input.Keys.A, Input.Keys.D, Input.Keys.W, Input.Keys.S, Input.Keys.P);
+//        BotsEmitter.getInstance().reset();
+//        BulletEmitter.getInstance().reset();
+//        BotsEmitter.getInstance().emitMany(10);
+//    }
+//
+//    public void update(float dt) {
+//        timer += Gdx.graphics.getDeltaTime();
+//        if (timer > 40.0f) {
+//            timer = 0.0f;
+//            level++;
+//        }
+//        background.update(dt);
+//        hero1.update(dt);
+//        BotsEmitter.getInstance().update(dt);
+//        BulletEmitter.getInstance().update(dt);
+//        LogicHelper.checkIntersection();
+//        LogicHelper.checkHeroAsteroidIntersection(hero1);
+//        if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE)) {
+//            if (hero1.getHp() <= 0) startNewGame();
+//        }
+//        if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) Gdx.app.exit();
+//
+//    }
+//
+//    public void dispose() { batch.dispose();}
+//}
 
-	public void create () {
-		batch = new SpriteBatch();
-		background = new Background();
-		textureBullet = new Texture("bullet64x32.png");
-		hero = new Hero();
-		enemies = new Enemy[20];
-		for (int i = 0; i < enemies.length; i++) {
-			enemies[i] = new Enemy();
-		}
-		bullets = new Bullet[100];
-		for (int i = 0; i < bullets.length ; i++) {
-			bullets[i] = new Bullet();
-		}
+    private SpriteBatch batch;
+    private Background background;
+    private Hero hero1;
+    private float timer;
+    private BitmapFont font;
+    public static int level = 1;
 
-	}
+    @Override
+    public void create() {
+        timer = 0.0f;
+        batch = new SpriteBatch();
+        background = new Background();
+        hero1 = new Hero(Input.Keys.A, Input.Keys.D, Input.Keys.W, Input.Keys.S, Input.Keys.P);
+        BotsEmitter.getInstance().emitMany(10);
+        font = new BitmapFont();
+    }
 
-
-	public void render () {
-		Gdx.gl.glClearColor(1, 1, 1, 1);
-		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-		batch.begin();
+    @Override
+    public void render() {
+        float dt = Gdx.graphics.getDeltaTime();
+        update(dt);
+        Gdx.gl.glClearColor(0f, 0f, 0f, 1.01f);
+        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+        batch.enableBlending();
+        batch.begin();
         background.render(batch);
-        hero.render(batch);
-		for (int i = 0; i < enemies.length ; i++) {
-			enemies[i].render(batch);
-		}
-		for (int i = 0; i < bullets.length ; i++) {
-			if(bullets[i].active){
-				batch.draw(textureBullet, bullets[i].position.x - 32, bullets[i]. position.y - 16);
-			}
-		}
-		batch.end();
-	}
+        hero1.render(batch);
+        BotsEmitter.getInstance().render(batch);
+        batch.setBlendFunction(GL20.GL_SRC_ALPHA, GL20.GL_ONE);
+        BulletEmitter.getInstance().render(batch);
+        batch.setBlendFunction(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
 
-	public void update(){
-    	background.update();
-    	hero.update();
-		for (int i = 0; i < enemies.length; i++) {
-			enemies[i].update();
-		}
-		for (int i = 0; i < bullets.length; i++) {
-			if(bullets[i].active){
-				bullets[i].update();
-				for (int j = 0; j < enemies.length; j++) {
-					if(enemies[j].hitBox.contains(bullets[i].position)){
-						bullets[i].diactivate();
-						enemies[j].recreate();
-					}
-					
-				}
-			}
-		}
-	}
+        if(hero1.isAlive()) {
+            font.draw(batch, "Level: " + level + "   INFO: WASD - Move, P(press) - Fire", 40, 40);
+            hero1.renderHUD(batch, font, 40, 680);
+        } else {
+            font.draw(batch, "PRESS SPACE TO RESTART", 500, 60);
+            font.draw(batch, "YOUR SCORE: " + hero1.getScore(), 530, 40);
+        }
 
 
+        batch.end();
+    }
 
+    public void startNewGame() {
+        hero1 = new Hero(Input.Keys.A, Input.Keys.D, Input.Keys.W, Input.Keys.S, Input.Keys.P);
+        BotsEmitter.getInstance().reset();
+        BulletEmitter.getInstance().reset();
+        BotsEmitter.getInstance().emitMany(10);
+    }
 
-	public void dispose () {
-		batch.dispose();
+    public void update(float dt) {
+        timer += Gdx.graphics.getDeltaTime();
+        if (timer > 40.0f) {
+            timer = 0.0f;
+            level++;
+        }
+        background.update(dt);
+        hero1.update(dt);
+        BotsEmitter.getInstance().update(dt);
+        BulletEmitter.getInstance().update(dt);
+        LogicHelper.checkIntersection();
+        LogicHelper.checkHeroAsteroidIntersection(hero1);
+        if(Gdx.input.isKeyJustPressed(Input.Keys.SPACE)) {
+            if(hero1.getHp() <= 0) startNewGame();
+        }
+        if(Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) Gdx.app.exit();
+    }
 
-	}
+    @Override
+    public void dispose() {
+        batch.dispose();
+    }
 }
